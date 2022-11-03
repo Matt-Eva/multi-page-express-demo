@@ -1,22 +1,25 @@
 const express = require('express')
 const app = express()
-const path = require('path')
 const port = 3000
 
+app.use(express.static(`public`))
 
-app.get('/about', (req, res) =>{
-    app.use('/public/about', express.static(`${__dirname}/public/about`))
-    res.sendFile(path.join(__dirname, '/public/about/about.html'))
-})
+// app.get('/about', (req, res) =>{
+//     res.sendFile(path.join(__dirname, '/public/about/about.html'))
+// })
 
-app.get('/dev', (req, res) =>{
-    app.use('/public/dev', express.static(`${__dirname}/public/dev`))
-    res.sendFile(path.join(__dirname, '/public/dev/dev.html'))
-})
+// app.get('/dev', (req, res) =>{
+//     res.sendFile(path.join(__dirname, '/public/dev/dev.html'))
+// })
 
-app.get('/', (req, res) =>{
-    app.use('/public/home', express.static(`${__dirname}/public/home`))
-    res.sendFile(path.join(__dirname, '/index.html'))
+// app.get('/', (req, res) =>{
+//     res.sendFile(path.join(__dirname, '/public/home/index.html'))
+// })
+
+app.use((req, res, next) =>{
+    if (res.status(404)){
+        res.redirect('/home/home.html')
+    }
 })
 
 app.listen(port, () =>{
