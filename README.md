@@ -74,7 +74,7 @@ Inside the public directory, we're going to be creating a few more folders - eac
 
 #### Home
 
-Inside the `public` folder, make a new directory called `home` by running `mkdir home` in your terminal. In here, we're going to creating 3 new files - `home.html`, `home.js`, and `home.css`. You can use the `touch` command to create these files - ex: `touch index.html`.
+Inside the `public` folder, make a new directory called `home` by running `mkdir home` in your terminal. In here, we're going to creating 3 new files - `home.html`, `home.js`, and `home.css`. You can use the `touch` command to create these files - ex: `touch home.html`.
 
 Let's give our `home.html` file some basic starting html:
 ```
@@ -180,4 +180,38 @@ h1{
 
 ### Serving Files
 
-Now that we have our files set up, it's time to tell express to serve them to our users!
+Now that we have our files set up, it's time to tell express to serve them to our users! Let's head back over to our `index.js` file.
+
+In this file, we're going to add another line of code:
+
+```
+app.use(express.static(`public`))
+```
+
+This line of code is telling express to serve all of the files we stored in our public folder as static assets. Now, when somebody makes a request for one of these files - like our `html` files - our app can send it to the user's browser, along with the javascript and css files that `html` file is using.
+
+If you start your server - `node index.js` - and visit `http://localhost:4000/home/home.html` you should see your homepage being rendered in the browser! You should also be able to navigate to your two other pages using the links you added to your html.
+
+If you check out the `sources` tab in your devtools, you can see which files are being served for each webpage that you're rendering. Awesome! We're almost done!
+
+### Handling 404 requests
+
+Let's set up a way to handle bad requests to our website - let's say somebody enters in an invalid url to our site. Instead of showing them a 404 page, let's redirect them to the homepage of our website.
+
+We can do this by adding some more code to our index.js file:
+
+```
+app.use((req, res, next) =>{
+    if (res.status(404)){
+        res.redirect('/home/home.html')
+    }
+})
+```
+
+This will check to see if the status response from our server is a 404 response (404 is the status code for "not found"). If we are getting a 404 status for a user request, we'll redirect that user to the `/home/home.html` endpoint instead, which will serve that homepage to our user.
+
+After you added this code, make sure to shut down and restart your server. Then test this out in your browser by entering an invalid url following the base url. You should be redirected to the homepage!
+
+## Conclusion
+
+That's it! A super basic, straightforward way to set up a static, multi-page express app. If you want to start making api and database calls, you can either add that logic to this server, or set up a different server that handles api requests and direct those requests to that api from your frontend.
